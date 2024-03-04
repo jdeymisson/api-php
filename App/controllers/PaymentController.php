@@ -2,17 +2,17 @@
 namespace App\controllers;
 require_once __DIR__ . '/../models/ClientModel.php';
 
-class ProductController {
-    public $productModel;
+class PaymentController {
+    public $paymentModel;
     
     public function __construct() {
         header('Content-Type: application/json');
-        $this->productModel = new \App\models\ProductModel();
+        $this->paymentModel = new \App\models\PaymentModel();
     }
 
     public function index() {
         try {
-            $result = $this->productModel->getAll();
+            $result = $this->paymentModel->getAll();
             echo json_encode(['data' => $result]);
         } catch (\Exception $e) {
             echo json_encode(['error' => $e->getMessage()]);
@@ -21,7 +21,7 @@ class ProductController {
 
     public function show($id = null) {
         try {
-            $result = $this->productModel->getBy($id);
+            $result = $this->paymentModel->getBy($id);
             echo json_encode(['data' => $result]);
         } catch (\Exception $e) {
             echo json_encode(['error' => $e->getMessage()]);
@@ -33,23 +33,22 @@ class ProductController {
             $payload = file_get_contents('php://input');
             $data = json_decode($payload, true);
             
-            if (!isset($data['nome'], $data['quantidade'], $data['preco'])) {
-                throw new \Exception('Dados incompletos. Nome e quantidade e preço são obrigatórios.');
+            if (!isset($data['nome'], $data['parcelas'])) {
+                throw new \Exception('Dados incompletos. Nome e parcelas são obrigatórios.');
             }
 
-            $result = $this->productModel->getBy(null, $data['nome']);
+            $result = $this->paymentModel->getBy(null, $data['nome']);
 
             if(count($result) > 0) {
-                throw new \Exception('Nome do produto já está em uso!');
+                throw new \Exception('forma de pagamento já cadastrada!');
             }
 
             $productDate = [
                 'nome' => $data['nome'],
-                'quantidade' => $data['quantidade'],
-                'preco' => $data['preco'],
+                'parcelas' => $data['parcelas'],
             ]; 
 
-            $result = $this->productModel->create($productDate);
+            $result = $this->paymentModel->create($productDate);
             http_response_code(201);
 
         } catch (\Exception $e) {
@@ -66,20 +65,19 @@ class ProductController {
                 throw new \Exception('É necessário informar o ID para atualização das informações!');
             }
             
-            $result = $this->productModel->getBy(null, $data['nome']);
+            $result = $this->paymentModel->getBy(null, $data['nome']);
             
             if(count($result) > 0 && $result[0]['id'] !== $data['id']) {               
-                throw new \Exception('Nome do produto já está em uso!');
+                throw new \Exception('Nome da forma de pagamento já está em uso!');
             };
 
             $productDate = [
                 'id' => $data['id'],
                 'nome' => $data['nome'],
-                'quantidade' => $data['quantidade'],
-                'preco' => $data['preco'],
+                'parcelas' => $data['parcelas'],
             ]; 
 
-            $result = $this->productModel->update($productDate);
+            $result = $this->paymentModel->update($productDate);
 
         } catch (\Exception $e) {
             echo json_encode(['error' => $e->getMessage()]);
@@ -88,7 +86,7 @@ class ProductController {
     }
 
     public function delete($id) {
-        $result = $this->productModel->delete($id);
+        $result = $this->paymentModel->delete($id);
         return $result;
     }
 }

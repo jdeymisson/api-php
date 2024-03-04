@@ -16,6 +16,12 @@
   $routes->add('PUT', '/product', 'ProductController@edit');
   $routes->add('DELETE', '/product/{id}', 'ProductController@delete');
 
+  $routes->add('GET', '/payment', 'PaymentController@index');
+  $routes->add('GET', '/payment/{id}', 'PaymentController@show');
+  $routes->add('POST', '/payment', 'PaymentController@insert');
+  $routes->add('PUT', '/payment', 'PaymentController@edit');
+  $routes->add('DELETE', '/payment/{id}', 'PaymentController@delete');
+
   return $routes;
   ?>
 
