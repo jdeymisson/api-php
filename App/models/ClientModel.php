@@ -48,10 +48,6 @@ class ClientModel extends BaseModel {
     }
 
     public function update($data) {
-        if (!isset($data['id'])) {
-            throw new \Exception('É necessário informar o ID para atualização das informações!');
-        }
-    
         $query = "UPDATE cliente SET nome = :nome, cpf = :cpf, endereco = :endereco, email = :email WHERE id = :id";
         $sql = $this->pdo->prepare($query);
         

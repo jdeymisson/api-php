@@ -12,8 +12,8 @@ class ClientController {
 
     public function index() {
         try {
-            $resultado = $this->clienteModel->getAll();
-            echo json_encode(['data' => $resultado]);
+            $result = $this->clienteModel->getAll();
+            echo json_encode(['data' => $result]);
         } catch (\Exception $e) {
             echo json_encode(['error' => $e->getMessage()]);
         }
@@ -21,8 +21,8 @@ class ClientController {
 
     public function show($id = null) {
             try {
-                $resultado = $this->clienteModel->getBy($id);
-                echo json_encode(['data' => $resultado]);
+                $result = $this->clienteModel->getBy($id);
+                echo json_encode(['data' => $result]);
             } catch (\Exception $e) {
                 echo json_encode(['error' => $e->getMessage()]);
             }
@@ -46,7 +46,7 @@ class ClientController {
             $result = $this->clienteModel->getBy(null, null, $data['email']);
 
             if(count($result) > 0 && $result[0]['cpf'] !== $data['nome']) {
-                throw new \Exception('E-mail já cadastrado!');
+                throw new \Exception('E-mail já está em uso!');
             };
 
             $clientDate = [
@@ -68,17 +68,21 @@ class ClientController {
         try {
             $payload = file_get_contents('php://input');
             $data = json_decode($payload, true);
+
+            if (!isset($data['id'])) {
+                throw new \Exception('É necessário informar o ID para atualização das informações!');
+            }
     
             $result = $this->clienteModel->getBy(null, $data['cpf']);
             
             if(count($result) > 0 && $result[0]['id'] !== $data['id']) {               
-                throw new \Exception('CPF já estar em uso!');
+                throw new \Exception('CPF já está em uso!');
             };
 
             $result = $this->clienteModel->getBy(null, null, $data['email']);
 
-            if(count($result) > 0 && $result[0]['cpf'] !== $data['cpf']) {
-                throw new \Exception('E-mail já cadastrado!');
+            if(count($result) > 0 && $result[0]['id'] !== $data['id']) {
+                throw new \Exception('E-mail já está em uso!');
             };
 
             $clientDate = [
@@ -98,7 +102,8 @@ class ClientController {
     }
 
     public function delete($id) {
-        $resultado = $this->clienteModel->delete($id);
+        $result = $this->clienteModel->delete($id);
+        return $result;
     }
 }
 
