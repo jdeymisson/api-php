@@ -21,7 +21,7 @@ Essa API é uma aplicação simples projetada para realizar operações CRUD (Cr
 
 5. Configure as informações de conexão com o banco de dados no arquivo de configuração (/config/config.php).
 
-6. Copie o conteúdo do arquivo schemabd.txt e execute ele em algum  SGBD, exemplo DBeaver, mysqladmin.
+6. Copie o conteúdo do arquivo schemabd.sql e execute ele em algum  SGBD, exemplo DBeaver, mysqladmin.
 
 ## Rodando localmente
 
