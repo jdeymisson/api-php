@@ -21,6 +21,10 @@ class ProductController {
 
     public function show($id = null) {
         try {
+            if($id <= 0 || null) {
+                throw new \Exception('Necessário que informe um id válido');
+            }
+
             $result = $this->productModel->getBy($id);
             echo json_encode(['data' => $result]);
         } catch (\Exception $e) {

@@ -21,6 +21,9 @@ class SaleController {
 
     public function show($id = null) {
         try {
+            if($id <= 0 || null) {
+                throw new \Exception('Necessário que informe um id válido');
+            }
             $result = $this->saleModel->getBy($id);
             echo json_encode(['data' => $result]);
         } catch (\Exception $e) {
@@ -33,10 +36,15 @@ class SaleController {
             $payload = file_get_contents('php://input');
             $data = json_decode($payload, true);
 
+            if (!isset($data['id_cliente']) || !isset($data['id_forma_pagamento']) || !isset($data['produto'])) {
+                error_log('Dados recebidos: ' . json_encode($data));
+                throw new \Exception('Verifique as propriedades enviadas!');
+            }
+
             $saleData = [
                 'id_cliente' => $data['id_cliente'],
                 'id_forma_pagamento' => $data['id_forma_pagamento'],
-                'produto' => json_encode($data['produto']),
+                'produto' => $data['produto'],
             ]; 
 
             $result = $this->saleModel->create($saleData);

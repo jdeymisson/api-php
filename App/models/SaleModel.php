@@ -23,7 +23,7 @@ class SaleModel extends BaseModel {
             GROUP BY
                 v.id
             ORDER BY
-                data_venda";
+                data_venda desc";
     
         $sql = $this->pdo->prepare($query);
         $sql->execute();
@@ -31,10 +31,10 @@ class SaleModel extends BaseModel {
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function getBy($id = null) {
+    public function getBy($id = 0) {
         $query = "
             SELECT 
-                v.id, 
+                v.id as id_venda, 
                 c.nome as nome_cliente,
                 c.cpf,
                 fp.nome,
@@ -52,7 +52,7 @@ class SaleModel extends BaseModel {
         $sql = $this->pdo->prepare($query);
         $sql->bindParam(':id', $id, PDO::PARAM_INT);
         $sql->execute();
-        $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
 
         return $result;
     }

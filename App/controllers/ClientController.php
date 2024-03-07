@@ -21,6 +21,9 @@ class ClientController {
 
     public function show($id = null) {
             try {
+                if($id <= 0 || null) {
+                    throw new \Exception('Necessário que informe um id válido');
+                }
                 $result = $this->clienteModel->getBy($id);
                 echo json_encode(['data' => $result]);
             } catch (\Exception $e) {
